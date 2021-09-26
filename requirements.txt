@@ -22,3 +22,7 @@ six==1.16.0
 sqlparse==0.4.1
 toml==0.10.2
 whitenoise==5.3.0
+
+pip~=21.2.4
+wheel~=0.36.2
+setuptools~=57.0.0
