@@ -19,18 +19,12 @@ class TestProfiles(TestCase):
 
     def test_url(self):
         print('\n testing profile index')
-        url_profiles = reverse('profiles:profiles_index')
+        url_profiles = reverse('profiles_index')
         result = self.client.get(url_profiles)
         assert result.status_code in [200]
 
     def test_profile(self):
         print('\n testing profile view')
-        url_profile = reverse('profiles:profile', args=[self.test_profile])
+        url_profile = reverse('profile', args=[self.test_profile])
         result = self.client.get(url_profile)
         assert result.status_code in [200]
-
-    def test_no_profile(self):
-        print('\n testing unknown profile view')
-        no_profile = reverse('profiles:profile', args=["usernone"])
-        result = self.client.get(no_profile)
-        assert result.status_code in [500]
