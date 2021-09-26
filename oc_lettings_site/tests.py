@@ -8,7 +8,7 @@ def test_dummy():
 
 class TestIndex(TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUp(cls):
         cls.test_index = '/index_test'
         cls.url_index = reverse("index")
 
