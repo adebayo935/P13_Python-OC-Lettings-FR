@@ -8,7 +8,7 @@ orbs:
   python: circleci/python@1.2
 
 workflows:
-  sample:  # This is the name of the workflow, feel free to change it to better match your workflow.
+  build&test-docker-deploy:  # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run. 
     # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows 
     jobs:
@@ -40,4 +40,5 @@ jobs:
           # This assumes pytest is installed via the install-package step above
           command: pytest
       - run:
+          name: Run lint tests
           command: flake8
