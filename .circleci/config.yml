@@ -7,6 +7,7 @@ orbs:
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
   python: circleci/python@1.2
   docker: circleci/docker@1.7.0
+  heroku: circleci/heroku@1.2.6
 
 workflows:
   build&test-docker-deploy:  # This is the name of the workflow, feel free to change it to better match your workflow.
@@ -17,8 +18,16 @@ workflows:
       - docker/publish:
           requires:
             - build-and-test
+          filters:
+            branches:
+              only: master
           image: $DOCKER_LOGIN/$IMAGE_NAME
-
+      - heroku-deploy:
+          requires:
+            - docker/publish
+          filters:
+            branches:
+                only: master
 jobs:
   build-and-test:  # This is the name of the job, feel free to change it to better match what you're trying to do!
     # These next lines defines a Docker executors: https://circleci.com/docs/2.0/executor-types/
@@ -47,4 +56,10 @@ jobs:
           name: Run lint tests
           command: flake8
 
+  heroku-deploy:
+    docker:
+      # replace with your preferred image
+      - image: cimg/bpython:3.8
+    steps:
+      - heroku/push-docker-image
   
