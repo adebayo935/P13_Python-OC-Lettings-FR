@@ -23,6 +23,7 @@ workflows:
             branches:
               only: master
           image: $DOCKER_LOGIN/$IMAGE_NAME
+          tag: latest,$CIRCLE_SHA1
 
       - heroku-deploy:
           requires:
@@ -73,6 +74,6 @@ jobs:
             HEROKU_API_KEY=$HEROKU_API_KEY heroku config:set PORT=8000 -a $HEROKU_APP_NAME
             HEROKU_API_KEY=$HEROKU_API_KEY heroku config:set SECRET_KEY=$SECRET_KEY -a $HEROKU_APP_NAME
             HEROKU_API_KEY=$HEROKU_API_KEY heroku container:login
-            HEROKU_API_KEY=$HEROKU_API_KEY heroku container:push -a $DJANGO_APP_NAME web
-            HEROKU_API_KEY=$HEROKU_API_KEY heroku container:release -a $DJANGO_APP_NAME web
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku container:push -a $HEROKU_APP_NAME web
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku container:release -a $HEROKU_APP_NAME web
 
