@@ -40,7 +40,7 @@ jobs:
     # The executor is the environment in which the steps below will be executed - below will use a python 3.9 container
     # Change the version below to your required version of python
     docker:
-      - image: cimg/python:3.8
+      - image: cimg/python:3.9
     # Checkout the code as the first step. This is a dedicated CircleCI step.
     # The python orb's install-packages step will install the dependencies from a Pipfile via Pipenv by default.
     # Here we're making sure we use just use the system-wide pip. By default it uses the project root's requirements.txt.
@@ -62,6 +62,8 @@ jobs:
 
   heroku-deploy:
     machine: true
+    docker:
+      - image: 
     steps:
       - checkout
       - run:
@@ -72,5 +74,4 @@ jobs:
             HEROKU_API_KEY=$HEROKU_API_KEY heroku config:set DEBUG=$DEBUG -a $HEROKU_APP_NAME
             HEROKU_API_KEY=$HEROKU_API_KEY heroku config:set PORT=8000 -a $HEROKU_APP_NAME
             HEROKU_API_KEY=$HEROKU_API_KEY heroku config:set SECRET_KEY=$SECRET_KEY -a $HEROKU_APP_NAME
-      - heroku/push-docker-image:
-          maintenance-mode: true 
+      - heroku/push-docker-image
