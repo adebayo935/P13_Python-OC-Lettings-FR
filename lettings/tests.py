@@ -28,10 +28,12 @@ class TestLettings(TestCase):
         print('\n testing letting index')
         url_lettings = reverse('lettings_index')
         result = self.client.get(url_lettings)
-        assert result.status_code in [200]
+        # assert result.status_code in [200]
+        self.assertContains(result, '<title>Lettings</title>', status_code=200)
 
     def test_letting(self):
         print('\n testing letting view')
         url_letting = reverse('letting', args=[self.test_letting.id])
         result = self.client.get(url_letting)
-        assert result.status_code in [200]
+        # assert result.status_code in [200]
+        self.assertContains(result, f'<title>{self.test_letting.title}</title>', status_code=200)

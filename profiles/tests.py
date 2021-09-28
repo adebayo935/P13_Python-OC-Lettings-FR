@@ -21,10 +21,12 @@ class TestProfiles(TestCase):
         print('\n testing profile index')
         url_profiles = reverse('profiles_index')
         result = self.client.get(url_profiles)
-        assert result.status_code in [200]
+        # assert result.status_code in [200]
+        self.assertContains(result, '<title>Profiles</title>', status_code=200)
 
     def test_profile(self):
         print('\n testing profile view')
         url_profile = reverse('profile', args=[self.test_profile])
         result = self.client.get(url_profile)
-        assert result.status_code in [200]
+        # assert result.status_code in [200]
+        self.assertContains(result, f'<title>{self.test_profile}</title>', status_code=200)

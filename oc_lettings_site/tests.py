@@ -15,9 +15,14 @@ class TestIndex(TestCase):
     def test_index(self):
         print('\n testing a bad url')
         result = self.client.get(self.test_index)
-        assert result.status_code in [404]
+        # assert result.status_code in [404]
+        self.assertContains(
+            result,
+            f'<title>Not Found</title>',
+            status_code=404)
 
     def test_url_index(self):
         print('\n testing index url')
         result = self.client.get(self.url_index)
-        assert result.status_code in [200]
+        # assert result.status_code in [200]
+        self.assertContains(result, '<title>Holiday Homes</title>', status_code=200)
