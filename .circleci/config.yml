@@ -7,6 +7,7 @@ orbs:
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
   python: circleci/python@1.2
   docker: circleci/docker@1.7.0
+  heroku: circleci/heroku@1.2.6
 
 workflows:
   build&test-docker-deploy:  # This is the name of the workflow, feel free to change it to better match your workflow.
@@ -14,10 +15,22 @@ workflows:
     # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows 
     jobs:
       - build-and-test
+
       - docker/publish:
           requires:
             - build-and-test
-          image: p13_oc_lettings
+          filters:
+            branches:
+              only: master
+          image: $DOCKER_LOGIN/$IMAGE_NAME
+
+      - heroku-deploy:
+          requires:
+            - docker/publish
+          filters:
+            branches:
+              only: master
+
 
 jobs:
   build-and-test:  # This is the name of the job, feel free to change it to better match what you're trying to do!
@@ -27,7 +40,7 @@ jobs:
     # The executor is the environment in which the steps below will be executed - below will use a python 3.9 container
     # Change the version below to your required version of python
     docker:
-      - image: cimg/python:3.8
+      - image: cimg/python:3.9
     # Checkout the code as the first step. This is a dedicated CircleCI step.
     # The python orb's install-packages step will install the dependencies from a Pipfile via Pipenv by default.
     # Here we're making sure we use just use the system-wide pip. By default it uses the project root's requirements.txt.
@@ -45,6 +58,21 @@ jobs:
           command: pytest
       - run:
           name: Run lint tests
-          command: flake8
+          command: flake8    
 
-  
+  heroku-deploy:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build and push Docker image to Heroku
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku create $HEROKU_APP_NAME --region eu || true
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku config:set DEBUG=$DEBUG -a $HEROKU_APP_NAME
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku config:set PORT=8000 -a $HEROKU_APP_NAME
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku config:set SECRET_KEY=$SECRET_KEY -a $HEROKU_APP_NAME
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku container:login
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku container:push -a $DJANGO_APP_NAME web
+            HEROKU_API_KEY=$HEROKU_API_KEY heroku container:release -a $DJANGO_APP_NAME web
+
