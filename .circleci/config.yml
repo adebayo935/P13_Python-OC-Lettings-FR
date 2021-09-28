@@ -15,6 +15,7 @@ workflows:
     # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows 
     jobs:
       - build-and-test
+
       - docker/publish:
           requires:
             - build-and-test
@@ -22,12 +23,15 @@ workflows:
             branches:
               only: master
           image: $DOCKER_LOGIN/$IMAGE_NAME
-      - heroku/push-docker-image:
+
+      - heroku-deploy:
           requires:
             - docker/publish
           filters:
             branches:
-                only: master
+              only: master
+
+
 jobs:
   build-and-test:  # This is the name of the job, feel free to change it to better match what you're trying to do!
     # These next lines defines a Docker executors: https://circleci.com/docs/2.0/executor-types/
@@ -54,5 +58,16 @@ jobs:
           command: pytest
       - run:
           name: Run lint tests
-          command: flake8
-  
+          command: flake8    
+
+  heroku-deploy:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build and push Docker image to Heroku
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a ${HEROKU_APP_NAME} web
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
