@@ -13,7 +13,7 @@ WORKDIR $DockerHOME
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DEBUG='development'
-ENV PORT 8000
+ENV PORT=8000
 
 # install dependencies
 RUN pip install --upgrade pip
