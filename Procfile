@@ -1,1 +1,1 @@
-web: gunicorn p13-test.wsgi --log-
+web: gunicorn oc-lettings-p13.wsgi --log-
