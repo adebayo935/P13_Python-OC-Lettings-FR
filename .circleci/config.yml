@@ -22,7 +22,7 @@ workflows:
             branches:
               only: master
           image: $DOCKER_LOGIN/$IMAGE_NAME
-      - heroku-deploy:
+      - heroku/push-docker-image:
           requires:
             - docker/publish
           filters:
@@ -55,11 +55,4 @@ jobs:
       - run:
           name: Run lint tests
           command: flake8
-
-  heroku-deploy:
-    docker:
-      # replace with your preferred image
-      - image: cimg/bpython:3.8
-    steps:
-      - heroku/push-docker-image
   
