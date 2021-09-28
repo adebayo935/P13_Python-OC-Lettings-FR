@@ -6,6 +6,7 @@ orbs:
   # so you dont have to copy and paste it everywhere.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
   python: circleci/python@1.2
+  docker: circleci/docker@1.7.0
 
 workflows:
   build&test-docker-deploy:  # This is the name of the workflow, feel free to change it to better match your workflow.
@@ -42,3 +43,13 @@ jobs:
       - run:
           name: Run lint tests
           command: flake8
+
+  update_dockerhub:
+    docker:
+      # replace with your preferred image
+      - image: cimg/python:3.8
+    steps:
+      - docker/update-description:
+          image: p13_oc_lettings 
+
+  
