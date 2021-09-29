@@ -12,7 +12,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ.get('SECRET_KEY', default='foo')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if os.environ.get('DEBUG', 'development') == 'production' else True
+# DEBUG = False if os.environ.get('DEBUG', 'development') == 'production' else True
+DEBUG = True
 
 ALLOWED_HOST = ['oc-lettings-p13.herokuapp.com', '127.0.0.1', 'localhost']
 
