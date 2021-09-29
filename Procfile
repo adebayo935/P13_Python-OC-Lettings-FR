@@ -1,1 +1,1 @@
-web: gunicorn oc-lettings-p13.wsgi --log-
+web: gunicorn oc-lettings-p13.wsgi --preload --log-file
