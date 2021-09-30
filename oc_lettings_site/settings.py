@@ -112,16 +112,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(PROJECT_ROOT, 'static/'),
 ]
 
 
 # Simplified static file serving.
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
