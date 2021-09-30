@@ -1,17 +1,72 @@
-<title>Lettings</title>
-<h1>Lettings</h1>
-{% if lettings_list %}
-    <ul>
-    {% for letting in lettings_list %}
-        <li>
-            <a href="{% url 'letting' letting_id=letting.id %}">
-                {{ letting.title }}
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No lettings are available.</p>
-{% endif %}
-<div><a href="{% url 'index' %}">Home</a></div>
-<div><a href="{% url 'profiles_index' %}">Profiles</a></div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <title>Holiday Homes</title>
+    <link rel="stylesheet" href="{% static 'style/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header__title">
+                <h1><a href="{% url 'index' %}">Holiday Homes</a></h1>
+            </div>
+            <nav class="topnav">
+                <ul>
+                    <li>
+                        <a href="{% url 'profiles_index' %}">Profiles</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'lettings_index' %}">Lettings</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <div class="content">
+            <section class="content__welcome content__welcome--lettings">
+                <img src="{% static '/img/undraw_buy_house_560d.svg' %}" />
+                <h2>Lettings</h2>
+                <p>Enjoy a peaceful moment in one of our lettings.</p>
+            </section>
+            <section class="content__lettings">
+                {% if lettings_list %}
+                    <ul>
+                    {% for letting in lettings_list %}
+                        <li>
+                            <a href="{% url 'letting' letting_id=letting.id %}">
+                                {{ letting.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No lettings are available.</p>
+                {% endif %}
+            </section>
+        </div>
+        <footer>
+            <p>Holiday Homes - 2021</p>
+        </footer>
+    </div>
+</body>
+
+</html>
+<!--<title>Lettings</title>-->
+<!--<h1>Lettings</h1>-->
+<!--{% if lettings_list %}-->
+<!--    <ul>-->
+<!--    {% for letting in lettings_list %}-->
+<!--        <li>-->
+<!--            <a href="{% url 'letting' letting_id=letting.id %}">-->
+<!--                {{ letting.title }}-->
+<!--            </a>-->
+<!--        </li>-->
+<!--    {% endfor %}-->
+<!--    </ul>-->
+<!--{% else %}-->
+<!--    <p>No lettings are available.</p>-->
+<!--{% endif %}-->
+<!--<div><a href="{% url 'index' %}">Home</a></div>-->
+<!--<div><a href="{% url 'profiles_index' %}">Profiles</a></div>-->

@@ -1,0 +1,8 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block branding %}
+    {% block extrastyle %}
+      <link rel='stylesheet' href="{% static 'style/admin.css' %}">
+    {% endblock %}
+    <h1>Site Administration</h1>
+{% endblock %}
