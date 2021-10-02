@@ -28,7 +28,8 @@ RUN pip install -r requirements.txt
 EXPOSE 8000
 
 # Collect all static files in app.
-RUN python manage.py collectstatic --noinput --clear
+# Already done for having the same version of the app on every environnement
+#RUN python manage.py collectstatic --noinput --clear
 
 # start server
 CMD gunicorn oc_lettings_site.wsgi:application --bind 0.0.0.0:$PORT
