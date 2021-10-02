@@ -75,3 +75,94 @@ Utilisation de PowerShell, comme ci-dessus sauf :
 
 - Pour activer l'environnement virtuel, `.\venv\Scripts\Activate.ps1` 
 - Remplacer `which <my-command>` par `(Get-Command <my-command>).Path`
+
+
+## Développement Pipeline CI/CD
+
+### Prérequis
+- Un compte CircleCI
+- Un compte Docker Hub
+- un compte Heroku
+- un compte Sentry
+
+### macOS / Linux
+
+#### Préparation
+- si vous souhaitez modifier les fichiers "statics" localement, 
+  - veuillez executer la commande suivante :
+    `python manage.py collectstatic --noinput --clear`
+  - et push sur le repo github les modifications avant le deploiement
+
+#### Installation de Docker
+- Installer docker sur votre machine local, si besoin
+- creer un compte sur Docker Hub
+- creer une clé API pour le workflow de CircleCI
+- le fichier de préparation de la conteneurisation exist déjà (Dockerfile)
+
+#### Installation de Heroku
+- Installer Heroku sur votre machine local, si besoin
+- creer un compte sur Heroku
+- lier le au compte GitHub
+- creer une clé API pour le workflow de CircleCI
+- creer une application 'oc-lettings-p13'(HEROKU_APP_NAME)
+
+#### Installation de Sentry
+- creer un compte sur Sentry
+- creer un projet Django
+- Récupérer le DSN, il sera a rajouter à la variable d'environnement DSN_SENTRY
+
+#### Création du pipeline CircleCI
+- creer un compte CircleCI
+- lier le au compte GitHub
+- Creer un pipeline(projet) avec le bon repo
+- Editer le fichier de configuration (.circleci/config.yml), 
+si vous souhaitez faire des modifications au pipeline existant
+- Dans les "settings" du projet, editer vos variables d'environnement
+  - Name	Value	
+    DEBUG	production	
+    DOCKER_LOGIN	*votre nom de compte docker*	
+    DOCKER_PASSWORD	*votre clé API Docker*	
+    IMAGE_NAME *nom de l'image Docker*
+    DSN_SENTRY	*le dsn donné par Sentry*	
+    HEROKU_API_KEY	*votre clé API Heroku*		
+    HEROKU_APP_NAME	*nom de l'application sur Heroku*
+    SECRET_KEY	*clé secret de votre application Django*
+
+#### Execution du pipeline CircleCI
+- Chaque fois qu'un push est fait sur le repo GitHub, 
+le pipeline va executer le 1er job du pipeline:
+  - execution de l'app en environnement virtuel
+  - execution des test `pytest` et `flake8`
+  
+- Si le job est réussi et qu'il s'agit de la branche Master
+le pipeline va executer le job de conteneurisation sur Docker
+  - création de deux images avec les tags: lastest et le “hash”  de commit CircleCI
+  - push sur le repo de Docker Hub
+  
+- Si le job est réussi et qu'il s'agit de la branche Master
+le pipeline va executer le déploiement sur Heroku
+  - création des variables d'environnement
+  - déploiement du conteneur docker (push & release)
+  - le site sera ensuite disponible à l'adresse:
+    `https://HEROKU_APP_NAME.herokuapp.com/`
+
+
+##Surveillance de l’application et suivi des erreurs via Sentry
+- le resultat de la surveillance se trouve  actuellement à l'adresse:
+  `https://sentry.io/share/issue/05c1c9fe95734a9288ec7d294b918635/`
+- l'URL déclenchant le test de surveillance est:
+  `https://HEROKU_APP_NAME.herokuapp.com/sentry-debug`
+
+
+## Déploiement local depuis Docker Hub
+- définir les variables d'environnement: DSN_SENTRY, DEBUG= production, SECRET_KEY
+- exécuter la commande:
+  `docker run --pull always -d -p 8000:8000 DOCKER_LOGIN/IMAGE_NAME:latest`
+- Aller sur `http://127.0.0.1:8000/` dans un navigateur.
+- pour pouvoir arreter votre container docker
+  - lister vos container actifs
+    `docker ps`
+  - recuperer le CONTAINER_ID  de celui qui a pour nom 
+    `DOCKER_LOGIN/IMAGE_NAME:latest`
+  - arreter le conteneur
+    `docker stop CONTAINER_ID`
