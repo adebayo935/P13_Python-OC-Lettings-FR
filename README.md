@@ -147,7 +147,7 @@ le pipeline va executer le déploiement sur Heroku
     `https://HEROKU_APP_NAME.herokuapp.com/`
 
 
-##Surveillance de l’application et suivi des erreurs via Sentry
+## Surveillance de l’application et suivi des erreurs via Sentry
 - le resultat de la surveillance se trouve  actuellement à l'adresse:
   `https://sentry.io/share/issue/05c1c9fe95734a9288ec7d294b918635/`
 - l'URL déclenchant le test de surveillance est:
